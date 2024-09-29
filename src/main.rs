@@ -62,20 +62,22 @@ fn find_paths(directory: ReadDir, current_path: &str) -> io::Result<Vec<String>>
         let entry = entry?;
         let path = entry.path();
 
-        let name =
-            path.file_name()
-                .and_then(|name| name.to_str())
-                .ok_or_else(|| io::Error::new(
-                    io::ErrorKind::Other,
-                    "Unable to get file name",
-                ))?;
+        let name = path
+            .file_name()
+            .and_then(|name| name.to_str())
+            .ok_or_else(|| io::Error::new(io::ErrorKind::Other, "Unable to get file name"))?;
 
         if path.is_dir() {
             let new_path = format!("{}/{}", current_path, name);
             let mut sub_paths = find_paths(fs::read_dir(path)?, new_path.as_str())?;
             paths.append(&mut sub_paths);
         } else if name.ends_with(".md") && name != "SUMMARY.md" {
-            paths.push(format!("{}/{}", current_path, name));
+            let file_name = if name == "README.md" {
+                "index.md"
+            } else {
+                name
+            };
+            paths.push(format!("{}/{}", current_path, file_name));
         }
     }
 
