@@ -5,8 +5,10 @@ use quick_xml::{DeError, se::to_string};
 #[derive(Debug, Serialize, PartialEq, Eq)]
 #[serde(rename = "urlset")]
 pub(crate) struct UrlSet {
+    #[serde(rename = "@xmlns")]
     pub xmlns: String,
-
+    #[serde(rename = "@xmlns:xhtml")]
+    pub xmlns_xhtml: String,
     pub url: Vec<Url>
 }
 
@@ -18,8 +20,10 @@ pub(crate) struct Url {
 
 impl UrlSet {
     pub fn new(urls: Vec<String>) -> Self {
+        // xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"  
         UrlSet {
             xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9".to_string(),
+            xmlns_xhtml:"http://www.w3.org/1999/xhtml".to_string(),
             url: urls
                 .into_iter()
                 .map(|url| Url {
