@@ -5,10 +5,9 @@ use quick_xml::{DeError, se::to_string};
 #[derive(Debug, Serialize, PartialEq, Eq)]
 #[serde(rename = "urlset")]
 pub(crate) struct UrlSet {
-    #[serde(rename = "@xlmns")]
-    pub xlmns: String,
+    pub xmlns: String,
 
-    pub urls: Vec<Url>
+    pub url: Vec<Url>
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -20,8 +19,8 @@ pub(crate) struct Url {
 impl UrlSet {
     pub fn new(urls: Vec<String>) -> Self {
         UrlSet {
-            xlmns: "http://www.sitemaps.org/schemas/sitemap/0.9".to_string(),
-            urls: urls
+            xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9".to_string(),
+            url: urls
                 .into_iter()
                 .map(|url| Url {
                     loc: url.replace(".md",".html"),
@@ -32,7 +31,7 @@ impl UrlSet {
     }
 
     pub fn to_xml(&self) -> Result<String,DeError> {
-        return to_string(&self);
+        to_string(&self)
     }
 }
 
